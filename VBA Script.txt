@@ -1,0 +1,74 @@
+Sub hw()
+
+'define variables
+Dim ws As Worksheet
+Dim ticker As String
+Dim vol As Double
+Dim yearopen As Double
+Dim yearclose As Double
+Dim yearlychange As Double
+Dim percentchange As Double
+Dim Summary As Integer
+
+
+'go through each worksheet headers
+For Each ws In Worksheets
+    ws.Range("I1").Value = "Ticker"
+    ws.Range("J1").Value = "Yearly Change"
+    ws.Range("K1").Value = "Percent Change"
+    ws.Range("L1").Value = "Total Stock Volume"
+
+
+Summary = 2
+  
+ For i = 2 To ws.Cells(Rows.Count, 1).End(xlUp).Row
+ 
+ 
+    If ws.Cells(i, 1).Value <> ws.Cells(i + 1, 1).Value Then
+        ticker = ws.Cells(i, 1).Value
+        yearopen = ws.Cells(i, 3).Value
+        yearclose = ws.Cells(i, 6).Value
+        vol = ws.Cells(i, 7).Value
+    
+        If yearclose = 0 Then
+            percentchange = 0
+      
+        Else
+            percentchange = (yearclose - yearopen) / yearclose
+        End If
+     
+        yearlychange = yearclose - yearopen
+        'issue with dividing by 0
+        
+        
+        ws.Range("I" & Summary).Value = ticker
+        ws.Range("J" & Summary).Value = yearlychange
+        ws.Range("K" & Summary).Value = percentchange
+        ws.Range("L" & Summary).Value = vol
+        
+        vol = 0
+        
+        If yearlychange < 0 Then
+            ws.Range("J" & Summary).Interior.ColorIndex = 3
+        Else
+            ws.Range("J" & Summary).Interior.ColorIndex = 4
+        End If
+        
+        Summary = Summary + 1
+    End If
+Next i
+'MsgBox (ws.Name + " is done")
+ws.Range("K2:K" & ws.Cells(Rows.Count, 11).End(xlUp).Row).NumberFormat = "0.00%"
+
+
+Next ws
+
+'format colors
+
+'yearlychange needs to be green. Range("J").interior.colorindex=4
+'and red for negative change interior.colorindex=3
+
+  
+  
+
+End Sub
